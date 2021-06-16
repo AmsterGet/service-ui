@@ -56,7 +56,7 @@ jobs:
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
 
       - name: UI assets compress
-        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
+        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" .'
 
       - name: Go Linter
         uses: golangci/golangci-lint-action@v2
@@ -124,7 +124,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Linix Binary Asset
+      - name: Upload Linux Binary Asset
         id: upload-linux-binary-asset
         uses: actions/upload-release-asset@v1
         env:
