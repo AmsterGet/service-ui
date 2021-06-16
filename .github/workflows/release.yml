@@ -54,11 +54,12 @@ jobs:
           npm --prefix ${{ env.UI_BUILD_REACT }} run lint
           npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
+        
+      - name: Create release directory
+        run: mkdir -v ${{ github.workspace }}/${{ env.RELEASE_DIR }}
 
       - name: UI assets compress
-        run: |
-          mkdir -v ${{ github.workspace }}/${{ env.RELEASE_DIR }}
-          cd ${{ env.UI_BUILD_REACT }}build && tar -czvf ${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }} ./
+        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
 
       - name: Go Linter
         uses: golangci/golangci-lint-action@v2
