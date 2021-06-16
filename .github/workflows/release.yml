@@ -74,7 +74,7 @@ jobs:
       - name: Go Dependencies
         run: |
           go mod download
-          go sum download
+          go mod tidy
 
       - name: Go Build Linux
         env:
