@@ -56,7 +56,9 @@ jobs:
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
 
       - name: UI assets compress
-        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" .'
+        run: |
+          mkdir -v ${{ github.workspace }}/${{ env.RELEASE_DIR }}
+          cd ${{ env.UI_BUILD_REACT }}build && tar -czvf ${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }} ./
 
       - name: Go Linter
         uses: golangci/golangci-lint-action@v2
