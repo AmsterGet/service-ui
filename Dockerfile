@@ -1,9 +1,9 @@
 FROM nginx:alpine
 
 LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
-LABEL version=5.6.7
+LABEL version=5.6.8
 
-ENV APP_DOWNLOAD_URL https://github.com/reportportal/service-ui/releases/download/v5.6.7
+ENV APP_DOWNLOAD_URL https://github.com/reportportal/service-ui/releases/download/v5.6.8
 
 ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 
