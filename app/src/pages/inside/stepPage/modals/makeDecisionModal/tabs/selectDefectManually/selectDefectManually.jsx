@@ -22,6 +22,8 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import UnlinkIcon from 'common/img/unlink-inline.svg';
 import {
@@ -67,8 +69,13 @@ export const SelectDefectManually = ({
   const [commentEditor, setCommentEditor] = useState(null);
   const defectFromTIGroup =
     itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+  const [llmSuggestLoading, setLllmSuggestLoading] = useState(false);
 
   const source = modalState.selectManualChoice;
+
+  const storeCommentEditor = (node, editor) => {
+    setCommentEditor({ node, editor });
+  };
 
   const handleManualChange = (value = {}) => {
     const issue = {
@@ -80,7 +87,8 @@ export const SelectDefectManually = ({
       decisionType: SELECT_DEFECT_MANUALLY,
       selectManualChoice: { issue },
     });
-    !issue.comment && commentEditor.focus();
+    console.log('Issue: ', issue);
+    !issue.comment && commentEditor?.node?.focus();
   };
 
   const selectDefectTypeManually = (value) => {
@@ -104,6 +112,19 @@ export const SelectDefectManually = ({
         setModalState({ commentOption: NOT_CHANGED_FOR_ALL });
       }
     }
+  };
+
+  const loadLlmSuggestion = () => {
+    const suggestedComment = "This defect is not a bug. It's a feature";
+    const { comment: existingComment } = source.issue;
+    const comment = existingComment ? `${existingComment}\n${suggestedComment}` : suggestedComment;
+    setLllmSuggestLoading(true);
+    // TODO: API request will be here instead of a timeout
+    setTimeout(() => {
+      console.log('Comment to set: ', comment);
+      commentEditor?.editor?.value(comment);
+      setLllmSuggestLoading(false);
+    }, 5000);
   };
 
   const getActionItems = () => {
@@ -212,13 +233,30 @@ export const SelectDefectManually = ({
         isNarrowView={getDefectTypeNarrowView()}
       />
       <div className={cx('defect-comment')}>
+        <div className={cx('llm-suggestion-control')}>
+          <span>Would like to try LLM suggestion for defect comment?</span>
+          {llmSuggestLoading ? (
+            <span>
+              <BubblesPreloader />
+            </span>
+          ) : (
+            <GhostButton
+              transparentBackground
+              transparentBorder
+              transparentBorderHover
+              onClick={loadLlmSuggestion}
+            >
+              Load
+            </GhostButton>
+          )}
+        </div>
         <MarkdownEditor
           value={
             modalState.decisionType === SELECT_DEFECT_MANUALLY
               ? source.issue.comment
               : itemData.issue.comment
           }
-          manipulateEditorOutside={setCommentEditor}
+          manipulateEditorOutside={storeCommentEditor}
           onChange={handleDefectCommentChange}
           eventsInfo={{
             onClickToolbarIcon:

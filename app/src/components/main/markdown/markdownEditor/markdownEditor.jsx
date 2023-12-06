@@ -128,6 +128,12 @@ export class MarkdownEditor extends React.Component {
     isPreview: false,
   };
 
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.value !== this.props.value) {
+  //     this.simpleMDE.value(this.props.value);
+  //   }
+  // }
+
   componentDidMount() {
     const {
       intl: { formatMessage },
@@ -271,7 +277,7 @@ export class MarkdownEditor extends React.Component {
     this.props.onChange(this.simpleMDE.value());
     this.props.eventsInfo.onChange &&
       this.props.tracking.trackEvent(this.props.eventsInfo.onChange);
-    this.props.manipulateEditorOutside(this.simpleMDE.codemirror);
+    this.props.manipulateEditorOutside(this.simpleMDE.codemirror, this.simpleMDE);
   };
 
   render() {
@@ -285,6 +291,7 @@ export class MarkdownEditor extends React.Component {
       provideErrorHint,
       hint: { hintText, hintCondition },
     } = this.props;
+    console.log(value);
 
     return (
       <>
